@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Smart Farmer Assistance"
+description = "A production-style agricultural operations app for farmers, procurement officers, and administrators to manage crop intake, book procurement slots, track queues, and monitor payments."
+version = "1.0.0"
+id = "artifacts/smart-farmer"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20346
+
+[services.development]
+run = "pnpm --filter @workspace/smart-farmer run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/smart-farmer", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/smart-farmer/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20346"
+BASE_PATH = "/"

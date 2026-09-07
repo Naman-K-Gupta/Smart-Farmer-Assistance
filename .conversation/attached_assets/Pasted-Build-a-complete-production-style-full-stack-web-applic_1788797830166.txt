@@ -1,0 +1,960 @@
+Build a complete, production-style full-stack web application called:
+
+"Smart Farmer Assistance & Farm Management System"
+
+IMPORTANT:
+I do NOT want a static frontend or a UI prototype.
+Build a fully functional application with:
+- Frontend
+- Backend/API
+- Database
+- Authentication
+- CRUD operations
+- Form validation
+- Real-time status updates where appropriate
+- Responsive design
+- Proper error handling
+- Secure architecture
+
+The application should be suitable for a college hackathon/project demonstration and should have a polished, modern, professional UI.
+
+==================================================
+1. RECOMMENDED TECH STACK
+==================================================
+
+Use:
+
+Frontend:
+- React.js
+- TypeScript
+- Tailwind CSS
+- shadcn/ui or another high-quality component library
+- Lucide icons
+- React Router
+- TanStack Query for API/data fetching
+
+Backend:
+- Node.js
+- Express.js
+- TypeScript
+
+Database:
+- PostgreSQL
+- Prisma ORM
+
+Authentication:
+- Secure email/mobile authentication
+- OTP-based login/registration
+- Role-based access control
+
+Roles:
+1. Farmer
+2. Government/Procurement Centre Officer
+3. Admin
+
+Use environment variables for secrets and API keys.
+
+Structure the project cleanly so frontend, backend, database schema, API routes and reusable components are easy to understand.
+
+==================================================
+2. DESIGN / UI REQUIREMENTS
+==================================================
+
+Create a premium modern agricultural technology dashboard.
+
+Design should feel:
+- Clean
+- Trustworthy
+- Professional
+- Simple enough for farmers
+- Modern enough for government/administration users
+
+Use:
+- Green as the primary agricultural color
+- White/light backgrounds
+- Dark green text
+- Subtle gradients
+- Rounded cards
+- Soft shadows
+- Large readable typography
+- Clear icons
+- Excellent spacing
+
+Do NOT make the interface overly complicated.
+
+The application must be:
+- Fully responsive
+- Mobile-first
+- Tablet compatible
+- Desktop compatible
+
+Use animations sparingly:
+- Card hover
+- Button feedback
+- Page transitions
+- Loading skeletons
+- Success/error notifications
+
+Create a professional landing page with:
+- Hero section
+- Problem statement
+- Key features
+- How it works
+- Benefits for farmers
+- Statistics
+- Call-to-action
+- Footer
+
+==================================================
+3. FARMER REGISTRATION
+==================================================
+
+Create a complete farmer registration/login system.
+
+Registration fields:
+
+- Full Name
+- Mobile Number
+- OTP
+- Village
+- District
+- Tehsil
+- State
+- Land Area
+- Crop
+- Bank Account details
+- Payment details
+
+IMPORTANT SECURITY:
+Never expose complete bank account numbers in the frontend.
+Store sensitive information securely.
+Mask sensitive information when displayed.
+
+Registration flow:
+
+Mobile Number
+       ↓
+Send OTP
+       ↓
+Verify OTP
+       ↓
+Farmer Details
+       ↓
+Land & Crop Details
+       ↓
+Bank/Payment Details
+       ↓
+Account Created
+       ↓
+Farmer Dashboard
+
+For development/demo purposes, implement a mock OTP provider if no real SMS provider is configured.
+
+Make OTP service modular so a real provider such as Twilio can be connected later.
+
+==================================================
+4. FARMER DASHBOARD
+==================================================
+
+After login, show a personalized farmer dashboard.
+
+Dashboard should contain:
+
+- Farmer name
+- Profile completion
+- Current crop
+- Land area
+- Upcoming booking
+- Procurement status
+- Payment status
+- Notifications
+- Nearest procurement centres
+- Quick actions
+
+Quick action buttons:
+
+[Book Slot]
+[Find Centre]
+[View Crop Details]
+[Payment Status]
+[Booking History]
+[Profile]
+
+Add dashboard statistics:
+
+- Total land
+- Current crop
+- Quantity expected
+- Booked slots
+- Completed procurements
+- Pending payments
+
+==================================================
+5. SMART SLOT BOOKING
+==================================================
+
+Create a complete Smart Slot Booking system.
+
+Farmer should be able to:
+
+1. Select crop
+2. Enter expected quantity
+3. Select procurement centre
+4. View available dates
+5. View available time slots
+6. Select slot
+7. Confirm booking
+
+Booking should have:
+
+- Unique booking ID
+- Farmer ID
+- Crop
+- Quantity
+- Centre
+- Date
+- Time slot
+- Status
+
+Statuses:
+
+- Pending
+- Confirmed
+- Approaching
+- Completed
+- Cancelled
+
+Prevent double booking.
+
+Automatically reduce slot capacity after successful booking.
+
+Show:
+
+"Available: 12 / 20 slots"
+
+When a slot is full:
+
+"Slot Full"
+
+and prevent selection.
+
+==================================================
+6. SMART SLOT LOGIC
+==================================================
+
+Create a smart slot allocation system.
+
+Inputs:
+- Centre capacity
+- Current bookings
+- Crop
+- Quantity
+- Date
+- Time
+- Expected arrival
+
+Calculate:
+
+- Available capacity
+- Approximate waiting time
+- Recommended slot
+- Queue size
+
+Example:
+
+Centre A
+Today's Capacity: 200 farmers
+Booked: 145
+Available: 55
+Approx. Waiting Time: 35 minutes
+
+Show a recommendation:
+
+"Recommended slot:
+10:30 AM - 11:00 AM"
+
+Allow farmer to accept the recommended slot or choose another available slot.
+
+==================================================
+7. LIVE PROCUREMENT CENTRE LOCATION
+==================================================
+
+Create a "Live Centre Location" feature.
+
+Show procurement centres on a map.
+
+Each centre should contain:
+
+- Centre name
+- Address
+- Distance
+- Current queue
+- Today's capacity
+- Remaining capacity
+- Approximate waiting time
+- Open/Closed status
+- Available slots
+- Contact information
+
+Example card:
+
+Government Procurement Centre
+Phagwara
+
+Status: OPEN
+Current Queue: 24
+Today's Capacity: 300
+Available Capacity: 176
+Approx. Waiting Time: 25 min
+
+Buttons:
+
+[View Details]
+[Book Slot]
+[Get Directions]
+
+If a real map API is not configured, create a clean map placeholder and structure the code so Google Maps/OpenStreetMap can be connected later.
+
+==================================================
+8. PROCUREMENT STATUS TRACKING
+==================================================
+
+Create a complete procurement tracking system.
+
+Farmer should be able to see:
+
+Crop
+Quantity
+Centre
+Booking ID
+Arrival status
+Quality check
+Procurement status
+Payment status
+
+Workflow:
+
+Slot Booked
+      ↓
+Farmer Arrived
+      ↓
+Quality Check
+      ↓
+Accepted / Rejected
+      ↓
+Procurement Completed
+      ↓
+Payment Initiated
+      ↓
+Payment Received
+
+Use a visual progress tracker/timeline.
+
+==================================================
+9. QUALITY CHECK
+==================================================
+
+Procurement officer should be able to perform quality checks.
+
+Fields:
+
+- Crop
+- Farmer
+- Quantity
+- Moisture percentage
+- Quality grade
+- Accepted quantity
+- Rejected quantity
+- Reason for rejection
+- Officer remarks
+
+Quality status:
+
+- Pending
+- Passed
+- Failed
+- Partially Accepted
+
+Automatically update procurement status after quality inspection.
+
+==================================================
+10. PAYMENT TRACKING
+==================================================
+
+Create a complete payment tracking system.
+
+Show:
+
+- Procurement ID
+- Crop
+- Quantity
+- Price per unit
+- Gross amount
+- Deductions
+- Final amount
+- Payment status
+- Transaction ID
+- Payment date
+
+Statuses:
+
+- Payment Pending
+- Payment Initiated
+- Payment Processing
+- Payment Completed
+- Payment Failed
+
+Show a payment timeline.
+
+IMPORTANT:
+Do not implement fake financial transactions.
+For demonstration, use a mock payment service with clearly labelled demo transactions.
+
+Make it possible to integrate a real payment/banking API later.
+
+==================================================
+11. SMS + WHATSAPP NOTIFICATIONS
+==================================================
+
+Create a notification system.
+
+Notifications should be triggered for:
+
+- Registration successful
+- OTP
+- Slot booked
+- Slot confirmed
+- Slot approaching
+- Centre delay
+- Quality check completed
+- Procurement completed
+- Payment initiated
+- Payment completed
+- Booking cancelled
+
+Create notification templates.
+
+Example:
+
+"Your procurement slot is confirmed.
+
+Centre: Government Procurement Centre
+Date: 12 September
+Time: 10:30 AM
+Booking ID: BK10234"
+
+For development:
+If SMS/WhatsApp credentials are unavailable, create a mock notification service.
+
+Architecture should allow future integration with:
+- Twilio
+- WhatsApp Business API
+- Other SMS providers
+
+Add notification logs to the database.
+
+==================================================
+12. REAL-TIME UPDATES
+==================================================
+
+Implement real-time updates where useful.
+
+Use WebSockets or Socket.IO.
+
+Examples:
+
+- Queue count changes
+- Centre capacity changes
+- Booking status
+- Payment status
+- Notifications
+
+If real-time services are unavailable in the development environment, provide a polling fallback.
+
+==================================================
+13. MULTI-LANGUAGE SUPPORT
+==================================================
+
+The application must support multiple languages.
+
+Initially implement:
+
+- English
+- Hindi
+- Punjabi
+
+Add a language selector in the navbar.
+
+Example:
+
+English | हिंदी | ਪੰਜਾਬੀ
+
+Do not hard-code user-facing text everywhere.
+
+Use an internationalization system such as i18next.
+
+Make all major:
+- Buttons
+- Labels
+- Navigation
+- Forms
+- Alerts
+- Dashboard text
+- Notifications
+
+translatable.
+
+==================================================
+14. FARMER PROFILE
+==================================================
+
+Create a profile page.
+
+Sections:
+
+Personal Information
+- Name
+- Mobile
+- Village
+- District
+- Tehsil
+
+Farm Information
+- Land area
+- Crops
+- Expected yield
+
+Bank/Payment Information
+- Masked account information
+- Payment status
+
+Allow:
+[Edit Profile]
+
+Show profile completion percentage.
+
+==================================================
+15. BOOKING HISTORY
+==================================================
+
+Create a booking history page.
+
+Table/cards containing:
+
+Booking ID
+Crop
+Centre
+Date
+Time
+Quantity
+Status
+
+Add filters:
+
+- All
+- Upcoming
+- Completed
+- Cancelled
+- Pending
+
+Add search functionality.
+
+==================================================
+16. ADMIN DASHBOARD
+==================================================
+
+Create a separate Admin Dashboard.
+
+Admin should see:
+
+Total Farmers
+Total Procurement Centres
+Today's Bookings
+Today's Procurement
+Pending Payments
+Total Quantity Procured
+
+Add charts:
+
+- Daily bookings
+- Procurement quantity
+- Payment status
+- Centre utilization
+- Crop-wise procurement
+
+Admin should be able to:
+
+- Manage farmers
+- Manage centres
+- Manage crops
+- Manage slots
+- Manage bookings
+- View payments
+- View notifications
+- View reports
+
+==================================================
+17. PROCUREMENT OFFICER DASHBOARD
+==================================================
+
+Create a dashboard for procurement centre officers.
+
+Officer should see:
+
+Today's bookings
+Current queue
+Expected arrivals
+Completed procurements
+Pending quality checks
+Pending payments
+
+Functions:
+
+- Check-in farmer
+- Update queue
+- Perform quality check
+- Accept/reject crop
+- Complete procurement
+- Update payment status
+
+==================================================
+18. DATABASE DESIGN
+==================================================
+
+Create a proper PostgreSQL database using Prisma.
+
+Create tables/models for at least:
+
+User
+FarmerProfile
+OfficerProfile
+Admin
+Village
+District
+Crop
+Farm
+ProcurementCentre
+CentreSlot
+Booking
+Queue
+QualityCheck
+Procurement
+Payment
+Notification
+NotificationLog
+OtpVerification
+
+Use proper:
+
+- Primary keys
+- Foreign keys
+- Relationships
+- Unique constraints
+- Indexes
+- CreatedAt
+- UpdatedAt
+
+Use UUIDs where appropriate.
+
+Do not store unnecessary duplicate information.
+
+==================================================
+19. API
+==================================================
+
+Create REST APIs.
+
+Authentication:
+POST /api/auth/register
+POST /api/auth/send-otp
+POST /api/auth/verify-otp
+POST /api/auth/login
+POST /api/auth/logout
+
+Farmers:
+GET /api/farmers/profile
+PUT /api/farmers/profile
+GET /api/farmers/bookings
+GET /api/farmers/payments
+
+Centres:
+GET /api/centres
+GET /api/centres/:id
+GET /api/centres/:id/slots
+GET /api/centres/:id/queue
+
+Bookings:
+POST /api/bookings
+GET /api/bookings/:id
+PUT /api/bookings/:id
+DELETE /api/bookings/:id
+
+Procurement:
+GET /api/procurement
+POST /api/procurement
+PUT /api/procurement/:id
+
+Quality:
+POST /api/quality-check
+GET /api/quality-check/:id
+
+Payments:
+GET /api/payments
+GET /api/payments/:id
+PUT /api/payments/:id
+
+Notifications:
+GET /api/notifications
+PUT /api/notifications/:id/read
+
+Admin:
+GET /api/admin/dashboard
+GET /api/admin/farmers
+GET /api/admin/bookings
+GET /api/admin/payments
+GET /api/admin/reports
+
+Protect private routes with authentication and role-based authorization.
+
+==================================================
+20. SECURITY
+==================================================
+
+Implement:
+
+- Password hashing if passwords are used
+- OTP expiration
+- Rate limiting
+- Input validation
+- SQL injection protection through Prisma
+- Authentication middleware
+- Role-based authorization
+- Secure cookies/tokens
+- Environment variables
+- Proper CORS configuration
+- Error handling
+- Never expose sensitive bank information
+- Never expose API keys in frontend code
+
+==================================================
+21. ERROR HANDLING
+==================================================
+
+Create professional error states.
+
+Examples:
+
+"No slots available"
+"Centre temporarily closed"
+"Payment processing"
+"Network error"
+"Invalid OTP"
+"Booking expired"
+
+Use toast notifications and proper inline form errors.
+
+Add loading states and skeleton screens.
+
+==================================================
+22. DEMO DATA
+==================================================
+
+Seed the database with realistic demo data.
+
+Create:
+
+- 10 farmers
+- 5 procurement centres
+- Multiple crops
+- Multiple slots
+- Sample bookings
+- Sample procurement records
+- Sample quality checks
+- Sample payments
+- Sample notifications
+
+Create demo accounts for:
+
+Farmer
+Officer
+Admin
+
+Clearly document demo credentials in the README.
+
+==================================================
+23. LANDING PAGE
+==================================================
+
+Create a beautiful landing page.
+
+Hero:
+
+"Smart Farming. Smarter Procurement."
+
+Subtitle:
+
+"Book procurement slots, track crop collection, find nearby centres and monitor payments — all from one platform."
+
+Buttons:
+
+[Get Started]
+[Explore Features]
+
+Sections:
+
+1. Smart Slot Booking
+2. Live Centre Tracking
+3. Crop & Procurement Management
+4. Payment Tracking
+5. SMS & WhatsApp Alerts
+6. Multi-language Support
+
+Add a "How It Works" section:
+
+Register
+   ↓
+Add Farm Details
+   ↓
+Book Slot
+   ↓
+Visit Centre
+   ↓
+Quality Check
+   ↓
+Procurement
+   ↓
+Payment
+
+==================================================
+24. MOBILE EXPERIENCE
+==================================================
+
+Farmers may primarily use mobile phones.
+
+Therefore create an excellent mobile experience.
+
+On mobile:
+
+- Bottom navigation
+- Large buttons
+- Large readable text
+- Simple forms
+- Easy booking flow
+- Minimal typing
+- Clear status indicators
+
+Bottom navigation:
+
+Home
+Bookings
+Centres
+Payments
+Profile
+
+==================================================
+25. PROJECT STRUCTURE
+==================================================
+
+Use a clean structure such as:
+
+/client
+  /src
+    /components
+    /pages
+    /layouts
+    /hooks
+    /services
+    /utils
+    /i18n
+
+/server
+  /src
+    /controllers
+    /routes
+    /services
+    /middleware
+    /utils
+
+/prisma
+  schema.prisma
+  seed.ts
+
+/shared
+
+==================================================
+26. IMPORTANT DEVELOPMENT REQUIREMENTS
+==================================================
+
+DO NOT:
+
+- Create fake buttons
+- Create non-functional forms
+- Store data only in localStorage
+- Use static JSON as the main database
+- Hard-code dashboard statistics
+- Build only the frontend
+- Leave major features as placeholders
+
+Every major button should perform a real action.
+
+Forms should:
+1. Validate input
+2. Send data to backend
+3. Save data to PostgreSQL
+4. Return API response
+5. Update frontend state
+6. Show success/error feedback
+
+==================================================
+27. README
+==================================================
+
+Create a detailed README containing:
+
+- Project overview
+- Features
+- Tech stack
+- Architecture
+- Database schema explanation
+- Installation steps
+- Environment variables
+- Database setup
+- Prisma migration commands
+- Seed commands
+- How to run frontend/backend
+- Demo accounts
+- API documentation
+- How to configure SMS
+- How to configure WhatsApp
+- How to configure maps
+- How to deploy
+
+==================================================
+28. FINAL QUALITY CHECK
+==================================================
+
+Before considering the project complete:
+
+- Run the application
+- Check all routes
+- Check all forms
+- Check database connection
+- Check CRUD operations
+- Check authentication
+- Check role permissions
+- Check booking logic
+- Check slot capacity
+- Check responsive design
+- Fix console errors
+- Fix TypeScript errors
+- Fix API errors
+- Test mobile layout
+- Test desktop layout
+
+Do not stop after creating the UI.
+
+The final result must be a working full-stack application connected to PostgreSQL.
+
+Make the UI look like a professional government/agri-tech product rather than a generic AI-generated website.
+
+Prioritize functionality + excellent UI/UX + clean architecture.

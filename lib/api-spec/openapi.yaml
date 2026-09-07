@@ -3,20 +3,27 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Smart Farmer Assistance API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: auth
+  - name: dashboard
+  - name: farmers
+  - name: centres
+  - name: bookings
+  - name: payments
+  - name: notifications
+  - name: officer
+  - name: admin
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +31,504 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /auth/demo-login:
+    post:
+      operationId: demoLogin
+      tags: [auth]
+      summary: Sign in to a demo role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DemoLoginInput"
+      responses:
+        "200":
+          description: Signed in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+  /dashboard:
+    get:
+      operationId: getDashboard
+      tags: [dashboard]
+      summary: Get the farmer dashboard
+      responses:
+        "200":
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dashboard"
+  /profile:
+    get:
+      operationId: getProfile
+      tags: [farmers]
+      summary: Get the current farmer profile
+      responses:
+        "200":
+          description: Farmer profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FarmerProfile"
+    patch:
+      operationId: updateProfile
+      tags: [farmers]
+      summary: Update the current farmer profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FarmerProfile"
+  /centres:
+    get:
+      operationId: listCentres
+      tags: [centres]
+      summary: List nearby procurement centres
+      responses:
+        "200":
+          description: Procurement centres
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProcurementCentre"
+  /centres/{centreId}/slots:
+    get:
+      operationId: listCentreSlots
+      tags: [centres]
+      summary: List available booking slots for a centre
+      parameters:
+        - $ref: "#/components/parameters/CentreId"
+      responses:
+        "200":
+          description: Available slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Slot"
+  /bookings:
+    get:
+      operationId: listBookings
+      tags: [bookings]
+      summary: List bookings
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [all, upcoming, completed, cancelled, pending]
+        - in: query
+          name: search
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Booking"
+    post:
+      operationId: createBooking
+      tags: [bookings]
+      summary: Book a procurement slot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingInput"
+      responses:
+        "201":
+          description: Booking created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+        "409":
+          description: Slot unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /bookings/{bookingId}:
+    get:
+      operationId: getBooking
+      tags: [bookings]
+      summary: Get booking details
+      parameters:
+        - $ref: "#/components/parameters/BookingId"
+      responses:
+        "200":
+          description: Booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+    patch:
+      operationId: updateBooking
+      tags: [bookings]
+      summary: Update booking status
+      parameters:
+        - $ref: "#/components/parameters/BookingId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingUpdate"
+      responses:
+        "200":
+          description: Updated booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+    delete:
+      operationId: cancelBooking
+      tags: [bookings]
+      summary: Cancel a booking
+      parameters:
+        - $ref: "#/components/parameters/BookingId"
+      responses:
+        "200":
+          description: Cancelled booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+  /payments:
+    get:
+      operationId: listPayments
+      tags: [payments]
+      summary: List farmer payments
+      responses:
+        "200":
+          description: Payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Payment"
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: List notifications
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+  /notifications/{notificationId}/read:
+    patch:
+      operationId: markNotificationRead
+      tags: [notifications]
+      summary: Mark notification as read
+      parameters:
+        - in: path
+          name: notificationId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Updated notification
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+  /officer/dashboard:
+    get:
+      operationId: getOfficerDashboard
+      tags: [officer]
+      summary: Get procurement officer dashboard
+      responses:
+        "200":
+          description: Officer dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfficerDashboard"
+  /admin/dashboard:
+    get:
+      operationId: getAdminDashboard
+      tags: [admin]
+      summary: Get administration metrics
+      responses:
+        "200":
+          description: Admin dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminDashboard"
 components:
+  parameters:
+    CentreId:
+      in: path
+      name: centreId
+      required: true
+      schema:
+        type: string
+    BookingId:
+      in: path
+      name: bookingId
+      required: true
+      schema:
+        type: string
   schemas:
     HealthStatus:
       type: object
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+    DemoLoginInput:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [farmer, officer, admin]
+      required: [role]
+    Session:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+      required: [user, token]
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [farmer, officer, admin]
+        location:
+          type: string
+        initials:
+          type: string
+      required: [id, name, role, location, initials]
+    FarmerProfile:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        mobile: { type: string }
+        village: { type: string }
+        district: { type: string }
+        state: { type: string }
+        landArea: { type: number }
+        crops:
+          type: array
+          items: { type: string }
+        expectedYield: { type: string }
+        maskedAccount: { type: string }
+        completion: { type: integer }
+      required: [id, name, mobile, village, district, state, landArea, crops, expectedYield, maskedAccount, completion]
+    ProfileUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 2 }
+        village: { type: string }
+        district: { type: string }
+        state: { type: string }
+        landArea: { type: number, minimum: 0 }
+        crops:
+          type: array
+          items: { type: string }
+        expectedYield: { type: string }
+    Dashboard:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        stats:
+          $ref: "#/components/schemas/DashboardStats"
+        upcomingBooking:
+          anyOf:
+            - $ref: "#/components/schemas/Booking"
+            - type: "null"
+        notifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Notification"
+        centres:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProcurementCentre"
+      required: [user, stats, upcomingBooking, notifications, centres]
+    DashboardStats:
+      type: object
+      properties:
+        totalLand: { type: number }
+        currentCrop: { type: string }
+        expectedQuantity: { type: string }
+        bookedSlots: { type: integer }
+        completedProcurements: { type: integer }
+        pendingPayments: { type: integer }
+      required: [totalLand, currentCrop, expectedQuantity, bookedSlots, completedProcurements, pendingPayments]
+    ProcurementCentre:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        address: { type: string }
+        district: { type: string }
+        distance: { type: string }
+        open: { type: boolean }
+        queue: { type: integer }
+        capacity: { type: integer }
+        remaining: { type: integer }
+        waitMinutes: { type: integer }
+        phone: { type: string }
+        coordinates:
+          type: object
+          properties:
+            lat: { type: number }
+            lng: { type: number }
+          required: [lat, lng]
+      required: [id, name, address, district, distance, open, queue, capacity, remaining, waitMinutes, phone, coordinates]
+    Slot:
+      type: object
+      properties:
+        id: { type: string }
+        date: { type: string }
+        label: { type: string }
+        available: { type: integer }
+        capacity: { type: integer }
+        recommended: { type: boolean }
+      required: [id, date, label, available, capacity, recommended]
+    BookingInput:
+      type: object
+      properties:
+        crop: { type: string, minLength: 2 }
+        quantity: { type: number, minimum: 1 }
+        centreId: { type: string }
+        slotId: { type: string }
+      required: [crop, quantity, centreId, slotId]
+    BookingUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [pending, confirmed, approaching, completed, cancelled]
+    Booking:
+      type: object
+      properties:
+        id: { type: string }
+        crop: { type: string }
+        quantity: { type: number }
+        centre:
+          $ref: "#/components/schemas/ProcurementCentre"
+        date: { type: string }
+        time: { type: string }
+        status:
+          type: string
+          enum: [pending, confirmed, approaching, completed, cancelled]
+        arrival: { type: string }
+        quality: { type: string }
+        procurement: { type: string }
+        payment: { type: string }
+      required: [id, crop, quantity, centre, date, time, status, arrival, quality, procurement, payment]
+    Payment:
+      type: object
+      properties:
+        id: { type: string }
+        bookingId: { type: string }
+        crop: { type: string }
+        quantity: { type: number }
+        pricePerUnit: { type: number }
+        gross: { type: number }
+        deductions: { type: number }
+        amount: { type: number }
+        status:
+          type: string
+          enum: [pending, initiated, processing, completed, failed]
+        transactionId: { type: string }
+        date: { type: string }
+      required: [id, bookingId, crop, quantity, pricePerUnit, gross, deductions, amount, status, transactionId, date]
+    Notification:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        message: { type: string }
+        time: { type: string }
+        type: { type: string }
+        read: { type: boolean }
+      required: [id, title, message, time, type, read]
+    OfficerDashboard:
+      type: object
+      properties:
+        centre:
+          $ref: "#/components/schemas/ProcurementCentre"
+        todayBookings: { type: integer }
+        currentQueue: { type: integer }
+        expectedArrivals: { type: integer }
+        completed: { type: integer }
+        pendingQuality: { type: integer }
+        pendingPayments: { type: integer }
+        queue:
+          type: array
+          items:
+            $ref: "#/components/schemas/Booking"
+      required: [centre, todayBookings, currentQueue, expectedArrivals, completed, pendingQuality, pendingPayments, queue]
+    AdminDashboard:
+      type: object
+      properties:
+        totalFarmers: { type: integer }
+        totalCentres: { type: integer }
+        todayBookings: { type: integer }
+        todayProcurement: { type: integer }
+        pendingPayments: { type: integer }
+        totalQuantity: { type: number }
+        bookingTrend:
+          type: array
+          items:
+            type: object
+            properties:
+              day: { type: string }
+              bookings: { type: integer }
+            required: [day, bookings]
+        cropMix:
+          type: array
+          items:
+            type: object
+            properties:
+              crop: { type: string }
+              quantity: { type: number }
+            required: [crop, quantity]
+      required: [totalFarmers, totalCentres, todayBookings, todayProcurement, pendingPayments, totalQuantity, bookingTrend, cropMix]
 

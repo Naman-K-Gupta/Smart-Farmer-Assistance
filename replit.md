@@ -1,6 +1,6 @@
-# [Project name]
+# Smart Farmer Assistance
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A responsive agricultural operations workspace for farmers, procurement officers, and administrators to coordinate crop intake, booking slots, centre queues, and payments.
 
 ## Run & Operate
 
@@ -22,23 +22,33 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/smart-farmer` — React/Vite application and responsive workspace routes.
+- `artifacts/api-server` — Express routes, demo seed initialization, booking capacity logic.
+- `lib/api-spec/openapi.yaml` — source of truth for the REST contract.
+- `lib/db/src/schema/smartFarmer.ts` — Drizzle tables for Smart Farmer data.
+- `README.md` — setup, demo workspaces, API overview, and integration notes.
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- OpenAPI is the contract source; the React Query client and server Zod validators are generated from it.
+- Booking creation decrements slot capacity in a database transaction and refuses duplicate or full slots.
+- Demo workspaces are explicit and isolated from production authentication; production identity should be added through Clerk before launch.
+- Payment records are demo-only and never represent a real financial transfer.
+- Centre locations are stored with coordinates so a real map provider can be added without changing the domain model.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Farmers can reserve procurement windows, monitor centre capacity, follow crop and payment status, and update their farm profile. Officers can work a live arrival queue, while administrators can see system-wide participation and procurement trends.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- The user asked for a polished, professional, farmer-friendly product rather than a static UI prototype.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Run `pnpm --filter @workspace/api-spec run codegen` after changing the OpenAPI document.
+- Run `pnpm run typecheck:libs` after changing shared database schema exports so API packages see fresh declarations.
+- Demo seed data is created lazily on the first Smart Farmer API request when the tables are empty.
 
 ## Pointers
 
