@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   Activity, ArrowRight, Bell, CalendarDays, Check, ChevronRight, CircleAlert, ClipboardList,
@@ -205,8 +205,13 @@ function NotFound() { return <main className="grid min-h-[100dvh] place-items-ce
 function Router() {
   const [location, setLocation] = useLocation();
   const [role, setRole] = useState<Role | null>(() => sessionStorage.getItem('sf_role') as Role | null);
+  const homeForRole = (nextRole: Role) => nextRole === 'officer' ? '/officer' : nextRole === 'admin' ? '/admin' : '/dashboard';
+  useEffect(() => {
+    if (role && location === '/') setLocation(homeForRole(role));
+  }, [location, role, setLocation]);
   const signOut = () => { sessionStorage.removeItem('sf_role'); setRole(null); setLocation('/'); };
-  if (!role || location === '/') return <Landing onLogin={setRole} />;
+  if (!role) return <Landing onLogin={(nextRole) => { sessionStorage.setItem('sf_role', nextRole); setRole(nextRole); setLocation(homeForRole(nextRole)); }} />;
+  if (location === '/') return null;
   const routePage = <Switch><Route path="/dashboard" component={DashboardPage} /><Route path="/bookings" component={BookingsPage} /><Route path="/bookings/new" component={NewBookingPage} /><Route path="/centres" component={CentresPage} /><Route path="/payments" component={PaymentsPage} /><Route path="/profile" component={ProfilePage} /><Route path="/officer" component={OfficerPage} /><Route path="/admin" component={AdminPage} /><Route component={NotFound} /></Switch>;
   return <Shell role={role} onSignOut={signOut}>{routePage}</Shell>;
 }

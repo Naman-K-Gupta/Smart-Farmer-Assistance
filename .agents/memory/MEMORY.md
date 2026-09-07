@@ -1,0 +1,1 @@
+- [Preview restart disconnects](preview-restarts.md) — transient Vite socket errors during managed workflow restarts are usually transport noise; verify after the restart.
